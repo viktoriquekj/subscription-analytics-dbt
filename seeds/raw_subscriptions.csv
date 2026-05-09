@@ -1,0 +1,11 @@
+subscription_id,customer_id,plan,mrr,status,start_date,end_date
+sub_001,cust_01,basic,29,active,2024-01-15,
+sub_002,cust_02,pro,99,churned,2024-01-20,2024-03-10
+sub_003,cust_03,basic,29,active,2024-02-01,
+sub_004,cust_04,pro,99,active,2024-02-14,
+sub_005,cust_05,enterprise,299,active,2024-03-01,
+sub_006,cust_06,basic,29,churned,2024-03-05,2024-04-20
+sub_007,cust_07,pro,99,active,2024-03-18,
+sub_008,cust_08,basic,29,active,2024-04-02,
+sub_009,cust_09,pro,99,churned,2024-02-28,2024-05-01
+sub_010,cust_10,enterprise,299,active,2024-04-10,

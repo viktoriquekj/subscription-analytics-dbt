@@ -1,0 +1,32 @@
+version: 2
+
+models:
+  - name: dim_customers
+    description: "One row per customer. Describes their current state and cohort."
+    columns:
+      - name: customer_id
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null
+
+  - name: fct_mrr
+    description: "Monthly recurring revenue aggregated by month and plan."
+    columns:
+      - name: total_mrr
+        description: "Total MRR for that month and plan combination"
+        tests:
+          - not_null
+
+  - name: fct_churn
+    description: "One row per churned subscription with timing and revenue impact."
+    columns:
+      - name: subscription_id
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null
+      - name: days_active_before_churn
+        description: "Days between subscription start and cancellation"
+        tests:
+          - not_null

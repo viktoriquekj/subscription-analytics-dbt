@@ -1,0 +1,27 @@
+version: 2
+
+models:
+  - name: stg_subscriptions
+    description: "Cleaned subscription records. One row per subscription."
+    columns:
+      - name: subscription_id
+        description: "Primary key"
+        tests:
+          - unique
+          - not_null
+      - name: status
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['active', 'churned', 'paused']
+      - name: mrr
+        tests:
+          - not_null
+
+  - name: stg_events
+    description: "Customer lifecycle events (upgrades, cancellations, downgrades)"
+    columns:
+      - name: event_id
+        tests:
+          - unique
+          - not_null
