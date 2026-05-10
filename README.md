@@ -20,9 +20,8 @@ early warning system to flag at-risk customers 30 days before predicted churn
 so the team can intervene with targeted retention offers.
 
 **This project's role:** Produce a clean, tested feature table
-(`fct_churn_features`) that serves as the direct input to the
-[churn-prediction](https://github.com/cojocaru-victoria/churn-prediction)
-ML pipeline. Every modelling decision here is made with that downstream
+(`fct_churn_features`) that serves as the direct input to a Churn 
+prediction ML pipeline. Every modelling decision here is made with that downstream
 use in mind.
 
 ---
@@ -36,8 +35,8 @@ Built with 10 synthetic rows in CSV seeds to validate the dbt model structure
 **v1.0 — current** (`branch: main`)
 Migrated to the IBM Telco Customer Churn dataset (7,043 real customers) loaded
 into DuckDB via `load_sources.py`. Seeds replaced with a proper source
-definition. `fct_churn_features` is the primary deliverable, consumed by the
-`churn-prediction` ML repository via `export_features.py`.
+definition. `fct_churn_features` is the primary deliverable, consumed by a Churn 
+prediction ML pipeline via `export_features.py`.
 
 See [`docs/development_log.md`](docs/development_log.md) for a full record of
 decisions, findings, and deliberate trade-offs made during development.
