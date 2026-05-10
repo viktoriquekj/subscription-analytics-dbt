@@ -2,3 +2,7 @@ target/
 dbt_packages/
 *.duckdb
 .env
+data/
+*.duckdb
+
+exports/

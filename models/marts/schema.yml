@@ -2,31 +2,92 @@ version: 2
 
 models:
   - name: dim_customers
-    description: "One row per customer. Describes their current state and cohort."
+    description: "One row per customer. Describes their profile and current subscription status."
     columns:
       - name: customer_id
-        description: "Primary key"
+        description: "Primary key — unique identifier from the Telco source."
         tests:
           - unique
           - not_null
+      - name: contract_type
+        description: "Subscription contract length: month-to-month, one year, or two year."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['month-to-month', 'one year', 'two year']
+      - name: internet_service
+        description: "Internet service tier: dsl, fiber optic, or no service."
+        tests:
+          - not_null
+      - name: has_churned
+        description: "1 if the customer has churned, 0 if still active."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0, 1]
 
   - name: fct_mrr
-    description: "Monthly recurring revenue aggregated by month and plan."
+    description: "Monthly recurring revenue aggregated by contract type."
     columns:
-      - name: total_mrr
-        description: "Total MRR for that month and plan combination"
-        tests:
-          - not_null
-
-  - name: fct_churn
-    description: "One row per churned subscription with timing and revenue impact."
-    columns:
-      - name: subscription_id
-        description: "Primary key"
+      - name: contract_type
+        description: "Primary grouping key."
         tests:
           - unique
           - not_null
-      - name: days_active_before_churn
-        description: "Days between subscription start and cancellation"
+      - name: total_mrr
+        description: "Sum of monthly charges across all customers in this contract type."
         tests:
           - not_null
+      - name: churn_rate_pct
+        description: "Percentage of customers in this contract type who have churned."
+        tests:
+          - not_null
+
+  - name: fct_churn_features
+    description: >
+      ML-ready feature table. One row per customer, containing all features
+      and the target variable (has_churned) for the churn prediction model.
+      Consumed by the churn-prediction repository via export_features.py.
+      Note: total_charges is intentionally excluded — it is a near-perfect
+      proxy for tenure × monthly_charges and would cause data leakage.
+    columns:
+      - name: customer_id
+        description: "Primary key."
+        tests:
+          - unique
+          - not_null
+      - name: tenure_months
+        description: "How long the customer has been subscribed, in months."
+        tests:
+          - not_null
+      - name: contract_type
+        description: "Subscription contract length."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: ['month-to-month', 'one year', 'two year']
+      - name: monthly_charges
+        description: "Customer's current monthly bill."
+        tests:
+          - not_null
+      - name: service_count
+        description: "Number of active add-on services (0–6). Engineered feature."
+        tests:
+          - not_null
+      - name: is_month_to_month
+        description: "1 if on a monthly contract, 0 otherwise. Derived from contract_type."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+      - name: has_churned
+        description: "Target variable. 1 = churned, 0 = active."
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values: [0, 1]

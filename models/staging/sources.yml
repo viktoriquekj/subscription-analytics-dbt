@@ -1,8 +1,13 @@
 version: 2
 
 sources:
-  - name: raw
+  - name: telco
+    database: dev
     schema: main
     tables:
-      - name: raw_subscriptions
-      - name: raw_events
+      - name: raw_telco_customers
+        description: >
+          IBM Telco customer churn dataset. 7,043 customers with subscription
+          plan, service usage, billing, and churn status. Loaded via
+          load_sources.py. Primary source for all downstream mart models and
+          the fct_churn_features ML handoff table.

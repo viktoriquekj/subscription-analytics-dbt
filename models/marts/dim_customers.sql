@@ -1,19 +1,17 @@
-with subscriptions as (
-    select * from {{ ref('stg_subscriptions') }}
-),
+with stg as (
 
-customers as (
-    select
-        customer_id,
-        min(start_date)     as first_subscription_date,
-        max(mrr)            as current_mrr,
-        bool_or(is_active)  as has_active_subscription,
+    select * from {{ ref('stg_customers') }}
 
-        -- cohort = the month they first subscribed
-        date_trunc('month', min(start_date)) as cohort_month
-
-    from subscriptions
-    group by customer_id
 )
 
-select * from customers
+select
+    customer_id,
+    gender,
+    is_senior_citizen,
+    has_partner,
+    has_dependents,
+    contract_type,
+    payment_method,
+    internet_service,
+    has_churned
+from stg

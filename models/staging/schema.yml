@@ -1,27 +1,28 @@
 version: 2
 
 models:
-  - name: stg_subscriptions
-    description: "Cleaned subscription records. One row per subscription."
+  - name: stg_customers
+    description: "Cleaned and typed Telco customer records. One row per customer."
     columns:
-      - name: subscription_id
-        description: "Primary key"
+      - name: customer_id
         tests:
           - unique
           - not_null
-      - name: status
+      - name: contract_type
         tests:
+          - not_null
           - accepted_values:
               arguments:
-                values: ['active', 'churned', 'paused']
-      - name: mrr
+                values: ['month-to-month', 'one year', 'two year']
+      - name: has_churned
         tests:
           - not_null
-
-  - name: stg_events
-    description: "Customer lifecycle events (upgrades, cancellations, downgrades)"
-    columns:
-      - name: event_id
+          - accepted_values:
+              arguments:
+                values: [0, 1]
+      - name: monthly_charges
         tests:
-          - unique
+          - not_null
+      - name: tenure_months
+        tests:
           - not_null

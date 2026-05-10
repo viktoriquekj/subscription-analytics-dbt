@@ -1,20 +1,20 @@
-with subscriptions as (
-    select * from {{ ref('stg_subscriptions') }}
-),
+with stg as (
 
--- calculate MRR grouped by month and plan
-mrr_by_month as (
-    select
-        date_trunc('month', start_date) as month,
-        plan,
-        count(*)                        as subscription_count,
-        sum(mrr)                        as total_mrr,
-        sum(case when is_active then mrr else 0 end)    as active_mrr,
-        sum(case when not is_active then mrr else 0 end) as churned_mrr
+    select * from {{ ref('stg_customers') }}
 
-    from subscriptions
-    group by 1, 2
 )
 
-select * from mrr_by_month
-order by month, plan
+select
+    contract_type,
+    count(*)                                            as customer_count,
+    round(sum(monthly_charges), 2)                      as total_mrr,
+    round(avg(monthly_charges), 2)                      as avg_mrr,
+    round(sum(case when has_churned = 1
+                   then monthly_charges end), 2)        as churned_mrr,
+    round(sum(case when has_churned = 0
+                   then monthly_charges end), 2)        as retained_mrr,
+    round(avg(case when has_churned = 1
+                   then 1.0 else 0.0 end) * 100, 1)    as churn_rate_pct
+from stg
+group by contract_type
+order by total_mrr desc
