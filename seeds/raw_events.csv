@@ -1,7 +1,0 @@
-event_id,customer_id,event_type,occurred_at
-evt_001,cust_02,cancel,2024-03-10
-evt_002,cust_06,cancel,2024-04-20
-evt_003,cust_09,cancel,2024-05-01
-evt_004,cust_03,upgrade,2024-04-15
-evt_005,cust_07,downgrade,2024-05-01
-evt_006,cust_01,upgrade,2024-05-20
